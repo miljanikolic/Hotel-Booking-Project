@@ -6,25 +6,22 @@ namespace HotelBooking.Application.Services
     public class RoomService
     {
         private readonly IRoomRepository _roomRepository;
-
         public RoomService(IRoomRepository roomRepository)
         {
             _roomRepository = roomRepository;
         }
-
         public void Create(Room room)
         {
             ValidateRoom(room);
 
             if (_roomRepository.RoomNumberExists(room.RoomNumber))
             {
-                throw new InvalidOperationException(
-                    "A room with this room number already exists.");
+                throw new InvalidOperationException("A room with this room number already exists.");
             }
 
             _roomRepository.Create(room);
         }
-
+        
         public Room? GetById(int roomId)
         {
             return _roomRepository.GetById(roomId);
@@ -41,21 +38,18 @@ namespace HotelBooking.Application.Services
 
             if (existingRoom == null)
             {
-                throw new KeyNotFoundException(
-                    "The specified room does not exist.");
+                throw new KeyNotFoundException("The specified room does not exist.");
             }
-
             ValidateRoom(room);
 
             if (_roomRepository.RoomNumberExists(
                     room.RoomNumber,
                     room.Id))
             {
-                throw new InvalidOperationException(
-                    "A room with this room number already exists.");
+                throw new InvalidOperationException("A room with this room number already exists.");
             }
-
-            _roomRepository.Update(room);
+            _roomRepository.Update(existingRoom);
+            
         }
 
         public void Delete(int roomId)
@@ -67,7 +61,6 @@ namespace HotelBooking.Application.Services
                 throw new KeyNotFoundException(
                     "The specified room does not exist.");
             }
-
             _roomRepository.DeleteById(roomId);
         }
 
@@ -75,14 +68,12 @@ namespace HotelBooking.Application.Services
         {
             if (room.Capacity <= 0)
             {
-                throw new ArgumentException(
-                    "Room capacity must be greater than zero.");
+                throw new ArgumentException("Room capacity must be greater than zero.");
             }
 
             if (room.PricePerNight <= 0)
             {
-                throw new ArgumentException(
-                    "Room price must be greater than zero.");
+                throw new ArgumentException("Room price must be greater than zero.");
             }
         }
     }

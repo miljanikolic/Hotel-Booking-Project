@@ -31,16 +31,14 @@ namespace HotelBooking.Application.Services
 
             if (guest == null)
             {
-                throw new ArgumentException(
-                    "The specified guest does not exist.");
+                throw new ArgumentException("The specified guest does not exist.");
             }
 
             Room? room = _roomRepository.GetById(booking.RoomId);
 
             if (room == null)
             {
-                throw new ArgumentException(
-                    "The specified room does not exist.");
+                throw new ArgumentException("The specified room does not exist.");
             }
 
             bool overlapping = _bookingRepository.HasOverlappingBooking(
@@ -50,12 +48,10 @@ namespace HotelBooking.Application.Services
 
             if (overlapping)
             {
-                throw new InvalidOperationException(
-                    "The room is already booked for the selected dates.");
+                throw new InvalidOperationException("The room is already booked for the selected dates.");
             }
 
-            booking.TotalBookingPrice =
-                booking.CalculateBookingPrice(room.PricePerNight);
+            booking.TotalBookingPrice = booking.CalculateBookingPrice(room.PricePerNight);
 
             booking.BookingStatus = BookingStatus.Confirmed;
 
@@ -72,49 +68,42 @@ namespace HotelBooking.Application.Services
             return _bookingRepository.GetAllBookings();
         }
 
-        public void Update(Booking booking)
+        public Booking Update(Booking booking)
         {
-            Booking? existingBooking =
-                _bookingRepository.GetById(booking.Id);
+            Booking? existingBooking = _bookingRepository.GetById(booking.Id);
 
             if (existingBooking == null)
             {
-                throw new KeyNotFoundException(
-                    "The specified booking does not exist.");
-            }
-
-            if (!booking.ValidateTime())
-            {
-                throw new ArgumentException(
-                    "Check-out date must be after check-in date.");
-            }
-
-            Guest? guest =
-                _guestRepository.GetById(booking.GuestId);
-
-            if (guest == null)
-            {
-                throw new ArgumentException(
-                    "The specified guest does not exist.");
-            }
-
-            Room? room =
-                _roomRepository.GetById(booking.RoomId);
-
-            if (room == null)
-            {
-                throw new ArgumentException(
-                    "The specified room does not exist.");
+                throw new KeyNotFoundException("The specified booking does not exist.");
             }
 
             if (existingBooking.BookingStatus == BookingStatus.Cancelled)
             {
-                throw new InvalidOperationException(
-                    "A cancelled booking cannot be updated.");
+                throw new InvalidOperationException("A cancelled booking cannot be updated.");
             }
 
-            bool overlapping =
-                _bookingRepository.HasOverlappingBooking(
+            if (!booking.ValidateTime())
+            {
+                throw new ArgumentException("Check-out date must be after check-in date.");
+            }
+
+            Guest? guest = _guestRepository.GetById(booking.GuestId);
+
+            if (guest == null)
+            {
+                throw new ArgumentException("The specified guest does not exist.");
+            }
+
+            Room? room = _roomRepository.GetById(booking.RoomId);
+
+            if (room == null)
+            {
+                throw new ArgumentException("The specified room does not exist.");
+            }
+
+            
+
+            bool overlapping = _bookingRepository.HasOverlappingBooking(
                     booking.RoomId,
                     booking.CheckInDate,
                     booking.CheckOutDate,
@@ -122,17 +111,14 @@ namespace HotelBooking.Application.Services
 
             if (overlapping)
             {
-                throw new InvalidOperationException(
-                    "The room is already booked for the selected dates.");
+                throw new InvalidOperationException("The room is already booked for the selected dates.");
             }
 
-            booking.TotalBookingPrice =
-                booking.CalculateBookingPrice(room.PricePerNight);
-
-            booking.BookingStatus =
-                existingBooking.BookingStatus;
+            booking.TotalBookingPrice = booking.CalculateBookingPrice(room.PricePerNight);
+            booking.BookingStatus = existingBooking.BookingStatus;
 
             _bookingRepository.Update(booking);
+            return booking;
         }
 
         public void Cancel(int bookingId)
@@ -142,25 +128,15 @@ namespace HotelBooking.Application.Services
 
             if (booking == null)
             {
-                throw new KeyNotFoundException(
-                    "The specified booking does not exist.");
+                throw new KeyNotFoundException("The specified booking does not exist.");
             }
 
             if (booking.BookingStatus == BookingStatus.Cancelled)
             {
-                throw new InvalidOperationException(
-                    "The booking is already cancelled.");
+                throw new InvalidOperationException("The booking is already cancelled.");
             }
 
             _bookingRepository.Cancel(bookingId);
         }
     }
 }
-
-
-//void Create(Booking booking);
-//Booking GetByRoomId(int roomId);
-//Booking GetByGuestEmail(string email);
-//List<Booking> GetAllBookings();
-//void Update(Booking booking);
-//void Cancel(int bookingId);

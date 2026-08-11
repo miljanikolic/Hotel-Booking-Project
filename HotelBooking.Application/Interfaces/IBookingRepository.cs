@@ -13,8 +13,8 @@ namespace HotelBooking.Application.Interfaces
 
         bool HasOverlappingBooking(
             int roomId,
-            DateTime checkInDate,
-            DateTime checkOutDate,
+            DateOnly checkInDate,
+            DateOnly checkOutDate,
             int? bookingId = null);
     }
 }

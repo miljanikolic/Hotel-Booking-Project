@@ -60,8 +60,8 @@ namespace HotelBooking.Infrastructure.Repositories
 
         public bool HasOverlappingBooking(
             int roomId,
-            DateTime checkInDate,
-            DateTime checkOutDate,
+            DateOnly checkInDate,
+            DateOnly checkOutDate,
             int? bookingId = null)
         {
             return _context.Bookings.Any(b =>

@@ -16,16 +16,13 @@ namespace HotelBooking.Application.Services
         {
             if (!guest.IsEmailValid())
             {
-                throw new ArgumentException(
-                    "The email address is not valid.");
+                throw new ArgumentException("The email address is not valid.");
             }
 
             if (_guestRepository.GuestExists(guest.Email))
             {
-                throw new InvalidOperationException(
-                    "A guest with this email address already exists.");
+                throw new InvalidOperationException("A guest with this email address already exists.");
             }
-
             _guestRepository.Create(guest);
         }
 
@@ -39,31 +36,33 @@ namespace HotelBooking.Application.Services
             return _guestRepository.GetAllGuests();
         }
 
-        public void Update(Guest guest)
+        public Guest Update(Guest guest)
         {
             Guest? existingGuest = _guestRepository.GetById(guest.Id);
 
             if (existingGuest == null)
             {
-                throw new KeyNotFoundException(
-                    "The specified guest does not exist.");
+                throw new KeyNotFoundException("The specified guest does not exist.");
             }
 
             if (!guest.IsEmailValid())
             {
-                throw new ArgumentException(
-                    "The email address is not valid.");
+                throw new ArgumentException("The email address is not valid.");
             }
 
-            if (_guestRepository.GuestExists(
-                    guest.Email,
-                    guest.Id))
+            if (_guestRepository.GuestExists(guest.Email, guest.Id))
             {
-                throw new InvalidOperationException(
-                    "A guest with this email address already exists.");
+                throw new InvalidOperationException("A guest with this email address already exists.");
             }
 
-            _guestRepository.Update(guest);
+            existingGuest.FirstName = guest.FirstName;
+            existingGuest.LastName = guest.LastName;
+            existingGuest.Email = guest.Email;
+            existingGuest.PhoneNumber = guest.PhoneNumber;
+
+            _guestRepository.Update(existingGuest);
+
+            return existingGuest;
         }
 
         public void Delete(int guestId)
@@ -72,10 +71,8 @@ namespace HotelBooking.Application.Services
 
             if (guest == null)
             {
-                throw new KeyNotFoundException(
-                    "The specified guest does not exist.");
+                throw new KeyNotFoundException("The specified guest does not exist.");
             }
-
             _guestRepository.DeleteById(guestId);
         }
     }
