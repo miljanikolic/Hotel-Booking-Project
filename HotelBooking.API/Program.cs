@@ -10,6 +10,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
@@ -22,7 +33,9 @@ builder.Services.AddScoped<BookingService>();
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+app.UseCors("Frontend");
+
+//app.UseHttpsRedirection();
 
 app.MapControllers();
 
