@@ -114,11 +114,18 @@ namespace HotelBooking.Application.Services
                 throw new InvalidOperationException("The room is already booked for the selected dates.");
             }
 
-            booking.TotalBookingPrice = booking.CalculateBookingPrice(room.PricePerNight);
-            booking.BookingStatus = existingBooking.BookingStatus;
+            existingBooking.GuestId = booking.GuestId;
+            existingBooking.RoomId = booking.RoomId;
+            existingBooking.CheckInDate = booking.CheckInDate;
+            existingBooking.CheckOutDate = booking.CheckOutDate;
+            existingBooking.TotalBookingPrice = booking.CalculateBookingPrice(room.PricePerNight);
 
-            _bookingRepository.Update(booking);
-            return booking;
+            existingBooking.Guest = guest;
+            existingBooking.Room = room;
+
+            _bookingRepository.Update(existingBooking);
+
+            return existingBooking;
         }
 
         public void Cancel(int bookingId)
