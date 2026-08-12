@@ -77,15 +77,38 @@ export default function RoomsPage() {
     }, []);
 
     function handleInputChange(
-        event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) {
-        const { name, value } = event.target;
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) {
+    const { name, value } = event.target;
+
+    if (name === "roomType") {
+        const roomType = Number(value);
 
         setForm((current) => ({
             ...current,
-            [name]: value,
+            roomType,
+            capacity:
+                roomType === 0
+                    ? 1
+                    : roomType === 1
+                    ? 2
+                    : current.capacity,
         }));
+
+        return;
     }
+
+    setForm((current) => ({
+        ...current,
+        [name]:
+            name === "roomNumber" ||
+            name === "roomType" ||
+            name === "capacity" ||
+            name === "pricePerNight"
+                ? Number(value)
+                : value,
+    }));
+}
 
     function openCreateForm() {
         setEditingRoomId(null);
@@ -202,7 +225,7 @@ export default function RoomsPage() {
 
 
     return (
-        <div className="mb-6">
+        <div className="mx-auto max-w-7xl px-6 py-10">
             <h1 className="text-3xl font-bold">Rooms</h1>
 
             {!showForm && (
@@ -212,7 +235,7 @@ export default function RoomsPage() {
                     placeholder="Search by room number, type or status..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="rounded-lg border px-4 py-2 md:flex-1"
+                    className="w-full rounded-lg border p-3 shadow-sm md:w-1/2"
                 />
 
                 <select
@@ -329,16 +352,27 @@ export default function RoomsPage() {
                                 Capacity
                             </label>
 
+                            {form.roomType === 2 ? (
                             <input
                                 id="capacity"
                                 name="capacity"
                                 type="number"
-                                min="1"
+                                min="3"
                                 value={form.capacity}
                                 onChange={handleInputChange}
                                 required
                                 className="w-full rounded-lg border p-2"
                             />
+                        ) : (
+                            <input
+                                id="capacity"
+                                name="capacity"
+                                type="number"
+                                value={form.roomType === 0 ? 1 : 2}
+                                disabled
+                                className="w-full rounded-lg border bg-gray-100 p-2 text-gray-600"
+                            />
+                        )}
                         </div>
 
                         {/* Price */}

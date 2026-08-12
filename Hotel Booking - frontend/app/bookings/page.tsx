@@ -284,22 +284,10 @@ export default function BookingsPage() {
                 <h1 className="text-3xl font-bold">
                     Bookings
                 </h1>
-                {!showForm && (
-                <button
-                    type="button"
-                    onClick={openCreateForm}
-                    disabled={
-                        guests.length === 0 ||
-                        rooms.length === 0
-                    }
-                    className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    + Add Booking
-                </button>
-                )}
+                
             </div>
             {!showForm && (
-            <div className="mb-6">
+            <div className="mb-6 flex items-center gap-3">
                 <input
                     type="text"
                     placeholder="Search by guest, room or status..."
@@ -309,10 +297,21 @@ export default function BookingsPage() {
                     }
                     className="w-full rounded-lg border p-3 shadow-sm md:w-1/2"
                 />
-            </div>
-            )}
 
-            {error && (
+                <button
+                    type="button"
+                    onClick={openCreateForm}
+                    disabled={
+                        guests.length === 0 ||
+                        rooms.length === 0
+                    }
+                    className="ml-auto w-32 whitespace-nowrap rounded bg-blue-600 px-4 py-3 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                    + Add Booking
+                </button>
+            </div>
+        )}
+                    {error && (
                 <div className="mb-6 rounded-lg bg-red-100 p-4 text-red-700">
                     {error}
                 </div>
@@ -564,7 +563,7 @@ export default function BookingsPage() {
                                     </td>
 
                                     <td className="p-4">
-                                        Room{" "}
+                                        
                                         {booking.roomNumber}
                                     </td>
 

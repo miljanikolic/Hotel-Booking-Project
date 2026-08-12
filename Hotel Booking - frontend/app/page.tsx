@@ -1,4 +1,52 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+    getRooms,
+    getGuests,
+    getBookings,
+} from "@/lib/api";
+
 export default function Dashboard() {
+    const [roomsCount, setRoomsCount] = useState(0);
+    const [guestsCount, setGuestsCount] = useState(0);
+    const [bookingsCount, setBookingsCount] = useState(0);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function loadDashboardData() {
+            try {
+                setError("");
+
+                const [rooms, guests, bookings] =
+                    await Promise.all([
+                        getRooms(),
+                        getGuests(),
+                        getBookings(),
+                    ]);
+
+                setRoomsCount(rooms.length);
+                setGuestsCount(guests.length);
+                setBookingsCount(bookings.length);
+            } catch (error) {
+                console.error(
+                    "Error loading dashboard data:",
+                    error
+                );
+
+                setError(
+                    "Unable to load dashboard data."
+                );
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadDashboardData();
+    }, []);
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="mb-8">
@@ -11,36 +59,47 @@ export default function Dashboard() {
                 </p>
             </div>
 
+            {error && (
+                <div className="mb-6 rounded-lg bg-red-100 p-4 text-red-700">
+                    {error}
+                </div>
+            )}
+
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+                {/* Total Rooms */}
                 <div className="rounded-lg bg-white p-6 shadow-sm">
                     <h2 className="text-sm font-medium text-gray-500">
                         Total Rooms
                     </h2>
 
                     <p className="mt-2 text-3xl font-bold">
-                        0
+                        {loading ? "..." : roomsCount}
                     </p>
                 </div>
 
+                {/* Total Guests */}
                 <div className="rounded-lg bg-white p-6 shadow-sm">
                     <h2 className="text-sm font-medium text-gray-500">
                         Total Guests
                     </h2>
 
                     <p className="mt-2 text-3xl font-bold">
-                        0
+                        {loading ? "..." : guestsCount}
                     </p>
                 </div>
 
+                {/* Total Bookings */}
                 <div className="rounded-lg bg-white p-6 shadow-sm">
                     <h2 className="text-sm font-medium text-gray-500">
                         Total Bookings
                     </h2>
 
                     <p className="mt-2 text-3xl font-bold">
-                        0
+                        {loading ? "..." : bookingsCount}
                     </p>
                 </div>
+
             </div>
         </div>
     );

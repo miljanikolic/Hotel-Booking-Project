@@ -46,7 +46,7 @@ Git
 -Clone the repository:
 git clone <https://github.com/miljanikolic/Hotel-Booking-Project.git>
 
--Open the application's appsettings.json file and configure the PostgreSQL connection string.
+-Open the application's appsettings.json file in Hotel Booking Project\HotelBooking.API and configure the PostgreSQL connection string.
 Replace YOUR_PASSWORD with your local PostgreSQL password
 
 -Navigate to the project directory:

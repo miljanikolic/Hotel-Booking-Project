@@ -190,38 +190,38 @@ export default function GuestsPage() {
                 <h1 className="text-3xl font-bold">
                     Guests
                 </h1>
-                {!showForm && (
-                <button
-                    onClick={openCreateForm}
-                    className="rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
-                >
-                    +Add Guest
-                </button>
-                )}
+                
             </div>
 
-            {/* Search */}
             {!showForm && (
-            <div className="mb-6 flex gap-3">
-                <input
-                    type="text"
-                    placeholder="Search by name, email or phone..."
-                    value={searchTerm}
-                    onChange={(event) =>
-                        setSearchTerm(event.target.value)
-                    }
-                    className="w-full rounded border px-4 py-2"
-                />
+                <div className="mb-6 flex items-center gap-3">
+                    <input
+                        type="text"
+                        placeholder="Search by name, email or phone..."
+                        value={searchTerm}
+                        onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                        }
+                        className="w-full rounded-lg border p-3 shadow-sm md:w-1/2"
+                    />
 
-                {searchTerm && (
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm("")}
+                            className="rounded border px-4 py-2 hover:bg-gray-100"
+                        >
+                            Clear
+                        </button>
+                    )}
+
                     <button
-                        onClick={() => setSearchTerm("")}
-                        className="rounded border px-4 py-2 hover:bg-gray-100"
+                        type="button"
+                        onClick={openCreateForm}
+                        className="ml-auto whitespace-nowrap rounded-lg bg-blue-600 px-4 py-3 font-medium text-white hover:bg-blue-700"
                     >
-                        Clear
+                        + Add Guest
                     </button>
-                )}
-            </div>
+                </div>
             )}
 
             {error && (
@@ -405,10 +405,7 @@ export default function GuestsPage() {
                 </div>
             )}
 
-            <p className="mt-4 text-sm text-gray-500">
-                Showing {filteredGuests.length} of{" "}
-                {guests.length} guests
-            </p>
+            
         </div>
     );
 }
