@@ -1,10 +1,12 @@
 ﻿using HotelBooking.Application.DTOs.Guests;
 using HotelBooking.Application.Services;
 using HotelBooking.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBooking.API.Controllers
 {
+    [Authorize(Roles = "Admin,Staff")]
     [ApiController]
     [Route("api/[controller]")]
     public class GuestController : ControllerBase
@@ -86,7 +88,7 @@ namespace HotelBooking.API.Controllers
             }
         }
 
-        // PUT: api/Guest/5
+        
         [HttpPut("{id}")]
         public ActionResult<GuestResponse> Update(int id, UpdateGuestRequest request)
         {
@@ -128,7 +130,7 @@ namespace HotelBooking.API.Controllers
             }
         }
 
-        // DELETE: api/Guest/5
+      
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

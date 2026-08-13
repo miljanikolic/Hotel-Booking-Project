@@ -4,9 +4,12 @@ using HotelBooking.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.NetworkInformation;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace HotelBooking.API.Controllers
 {
 
+    [Authorize(Roles = "Admin,Staff")]
     [ApiController]
     [Route("api/[controller]")]
     public class RoomController : ControllerBase
@@ -67,7 +70,7 @@ namespace HotelBooking.API.Controllers
                 return Conflict(new { message = ex.Message });
             }
         }
-        // PUT: api/Room/1
+        
         [HttpPut("{id}")]
         public ActionResult<RoomResponse> Update(int id, UpdateRoomRequest request)
         {

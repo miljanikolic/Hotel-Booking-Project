@@ -1,5 +1,6 @@
 "use client";
 
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { useEffect, useState } from "react";
 import {
     createRoom,
@@ -225,6 +226,7 @@ export default function RoomsPage() {
 
 
     return (
+        <ProtectedRoute>
         <div className="mx-auto max-w-7xl px-6 py-10">
             <h1 className="text-3xl font-bold">Rooms</h1>
 
@@ -321,7 +323,7 @@ export default function RoomsPage() {
                             />
                         </div>
 
-                        {/* Room Type */}
+                        
                         <div>
                             <label
                                 htmlFor="roomType"
@@ -343,7 +345,7 @@ export default function RoomsPage() {
                             </select>
                         </div>
 
-                        {/* Capacity */}
+                        
                         <div>
                             <label
                                 htmlFor="capacity"
@@ -375,7 +377,7 @@ export default function RoomsPage() {
                         )}
                         </div>
 
-                        {/* Price */}
+                        
                         <div>
                             <label
                                 htmlFor="pricePerNight"
@@ -397,7 +399,7 @@ export default function RoomsPage() {
                             />
                         </div>
 
-                        {/* Status */}
+                        
                         <div>
                             <label
                                 htmlFor="roomStatus"
@@ -419,7 +421,7 @@ export default function RoomsPage() {
                             </select>
                         </div>
 
-                        {/* Buttons */}
+                        
                         <div className="flex gap-3 md:col-span-2">
                             <button
                                 type="submit"
@@ -524,5 +526,7 @@ export default function RoomsPage() {
                 </div>
             )}
         </div>
+    );
+        </ProtectedRoute>
     );
 }

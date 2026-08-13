@@ -1,5 +1,51 @@
-const API_URL = "http://localhost:5291/api";
+export const API_URL = "http://localhost:5291/api";
 
+export interface AuthUser {
+    id: number;
+    username: string;
+    role: string;
+    isActive: boolean;
+    createdAt: string;
+}
+
+export interface LoginRequest {
+    username: string;
+    password: string;
+}
+
+export interface AuthResponse {
+    success: boolean;
+    message: string;
+    token: string;
+    user: AuthUser | null;
+}
+
+export function getAuthHeaders(): HeadersInit {
+    const token = typeof window !== "undefined" ? localStorage.getItem("hotel-booking-token") : null;
+
+    return {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+}
+
+export async function login(credentials: LoginRequest): Promise<AuthResponse> {
+    const response = await fetch(`${API_URL}/Auth/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok || !data?.success) {
+        throw new Error(data?.message || "Login failed.");
+    }
+
+    return data as AuthResponse;
+}
 
 export interface Booking {
     id: number;
@@ -25,9 +71,7 @@ export async function createBooking(
 ): Promise<Booking> {
     const response = await fetch(`${API_URL}/Booking`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(booking),
     });
 
@@ -48,9 +92,7 @@ export async function updateBooking(
 ): Promise<Booking> {
     const response = await fetch(`${API_URL}/Booking/${id}`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(booking),
     });
 
@@ -68,6 +110,7 @@ export async function updateBooking(
 export async function cancelBooking(id: number): Promise<void> {
     const response = await fetch(`${API_URL}/Booking/${id}/cancel`, {
         method: "PATCH",
+        headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
@@ -80,14 +123,16 @@ export async function cancelBooking(id: number): Promise<void> {
 }
 
 export async function getBookings(): Promise<Booking[]> {
-    const response = await fetch(`${API_URL}/Booking`);
+    const response = await fetch(`${API_URL}/Booking`, {
+        headers: getAuthHeaders(),
+    });
 
     if (!response.ok) {
         throw new Error("Failed to fetch bookings");
     }
 
     return response.json();
-}  
+}
 
 export interface Room {
     id: number;
@@ -107,7 +152,9 @@ export interface RoomRequest {
 }
 
 export async function getRooms(): Promise<Room[]> {
-    const response = await fetch(`${API_URL}/Room`);
+    const response = await fetch(`${API_URL}/Room`, {
+        headers: getAuthHeaders(),
+    });
 
     if (!response.ok) {
         throw new Error("Failed to fetch rooms");
@@ -121,9 +168,7 @@ export async function createRoom(
 ): Promise<Room> {
     const response = await fetch(`${API_URL}/Room`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(room),
     });
 
@@ -144,9 +189,7 @@ export async function updateRoom(
 ): Promise<Room> {
     const response = await fetch(`${API_URL}/Room/${id}`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(room),
     });
 
@@ -164,6 +207,7 @@ export async function updateRoom(
 export async function deleteRoom(id: number): Promise<void> {
     const response = await fetch(`${API_URL}/Room/${id}`, {
         method: "DELETE",
+        headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
@@ -183,35 +227,35 @@ export interface Guest {
     phoneNumber: string;
 }
 
-export interface GuestRequest{
+export interface GuestRequest {
     firstName: string;
     lastName: string;
     email: string;
     phoneNumber: string;
 }
 
-
 export async function getGuests(): Promise<Guest[]> {
-    const response = await fetch(`${API_URL}/Guest`);
+    const response = await fetch(`${API_URL}/Guest`, {
+        headers: getAuthHeaders(),
+    });
 
     if (!response.ok) {
         throw new Error("Failed to fetch guests");
     }
 
     return response.json();
-}   
+}
 
 export async function createGuest(guest: GuestRequest): Promise<Guest> {
     const response = await fetch(`${API_URL}/Guest`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(guest)
+        headers: getAuthHeaders(),
+        body: JSON.stringify(guest),
     });
 
     if (!response.ok) {
-        throw new Error("Failed to create guest");
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.message || "Failed to create guest");
     }
 
     return response.json();
@@ -220,14 +264,13 @@ export async function createGuest(guest: GuestRequest): Promise<Guest> {
 export async function updateGuest(guestId: number, guest: GuestRequest): Promise<Guest> {
     const response = await fetch(`${API_URL}/Guest/${guestId}`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(guest)
+        headers: getAuthHeaders(),
+        body: JSON.stringify(guest),
     });
 
     if (!response.ok) {
-        throw new Error("Failed to update guest");
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.message || "Failed to update guest");
     }
 
     return response.json();
@@ -235,15 +278,14 @@ export async function updateGuest(guestId: number, guest: GuestRequest): Promise
 
 export async function deleteGuest(guestId: number): Promise<void> {
     const response = await fetch(`${API_URL}/Guest/${guestId}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
-        throw new Error("Failed to delete guest");
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.message || "Failed to delete guest");
     }
-
-    
-    //return response.json();
 }
 
  

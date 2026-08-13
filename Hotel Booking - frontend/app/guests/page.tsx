@@ -1,5 +1,6 @@
 "use client";
 
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { useEffect, useState } from "react";
 import {
     Guest,
@@ -185,6 +186,7 @@ export default function GuestsPage() {
     }
 
     return (
+        <ProtectedRoute>
         <div className="mx-auto max-w-7xl px-6 py-10">
             <div className="mb-6 flex items-center justify-between">
                 <h1 className="text-3xl font-bold">
@@ -311,7 +313,6 @@ export default function GuestsPage() {
                 </div>
             )}
 
-            {/* Guests table */}
             {filteredGuests.length === 0 ? (
                 <div className="rounded border bg-gray-50 p-8 text-center">
                     {guests.length === 0 ? (
@@ -407,5 +408,7 @@ export default function GuestsPage() {
 
             
         </div>
+    );
+        </ProtectedRoute>
     );
 }

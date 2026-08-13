@@ -1,10 +1,12 @@
 ﻿using HotelBooking.Application.DTOs.Bookings;
 using HotelBooking.Application.Services;
 using HotelBooking.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBooking.API.Controllers
 {
+    [Authorize(Roles = "Admin,Staff")]
     [ApiController]
     [Route("api/[controller]")]
     public class BookingController : ControllerBase
