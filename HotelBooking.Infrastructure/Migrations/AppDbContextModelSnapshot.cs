@@ -55,7 +55,7 @@ namespace HotelBooking.Repositories.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("HotelBooking.Entities.Guest", b =>
@@ -91,7 +91,7 @@ namespace HotelBooking.Repositories.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Guests");
+                    b.ToTable("Guests", (string)null);
                 });
 
             modelBuilder.Entity("HotelBooking.Entities.Room", b =>
@@ -123,7 +123,7 @@ namespace HotelBooking.Repositories.Migrations
                     b.HasIndex("RoomNumber")
                         .IsUnique();
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("HotelBooking.Entities.Booking", b =>
